@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <!-- Configurações básicas de codificação e responsividade para dispositivos móveis -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastrar Empresa - CIESP</title>
+    
+    <!-- Fonte Oficial: Plus Jakarta Sans via Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (Ícones vetoriais para botões e menus) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5 CSS (Framework de estilos e grid) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      /* =================================================================
+         1. VARIÁVEIS DE CORES E ESTILOS GLOBAIS
+         Facilita alterar a paleta de cores da página inteira em um só lugar
+      ================================================================= */
+      :root {
+        --primary-ciesp: #8e1b22;                             /* Vermelho institucional CIESP */
+        --primary-dark: #6b1419;                              /* Vermelho escuro para estados de hover */
+        --primary-gradient: linear-gradient(135deg, #8e1b22 0%, #b3242d 100%); /* Gradiente dos botões */
+        --bg-body: #f8fafc;                                   /* Cor de fundo Off-White limpa */
+        --text-dark: #0f172a;                                 /* Cor dos textos principais */
+        --text-muted: #64748b;                                /* Cor de textos secundários/suaves */
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+      }
+
+      /* =================================================================
+         2. ESTILIZAÇÃO DA TELA DE CARREGAMENTO (PRELOADER)
+      ================================================================= */
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #ffffff; /* Fundo branco da tela de carregamento */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;             /* Fica acima de todos os elementos da página */
+        transition: opacity 0.6s ease, visibility 0.6s ease; /* Transição suave de desaparecimento */
+      }
+
+      /* Classe aplicada via JS para fazer o efeito de desvanecer (fade-out) */
+      #preloader.fade-out {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .loader-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      /* Caixinha vermelha com a logo dentro do preloader */
+      .loader-logo-badge {
+        background-color: #ed1c24;
+        padding: 10px 24px;
+        border-radius: 4px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(237, 28, 36, 0.2);
+      }
+
+      /* Ajuste da imagem da logo dentro da caixa do carregador */
+      .loader-logo-badge img {
+        height: 32px;
+        filter: brightness(0) invert(1); /* Torna o logotipo inteiramente branco */
+        object-fit: contain;
+      }
+
+      /* Barra vermelha de fundo do progresso */
+      .loader-progress-track {
+        width: 100%;
+        height: 4px;
+        background-color: #ed1c24;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Linha escura que se move preenchendo a barra de carregamento */
+      .loader-progress-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background-color: #2b2b2b;
+        animation: fillProgress 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+
+      /* Animação que faz a linha preencher de 0% até 100% em 2 segundos */
+      @keyframes fillProgress {
+        0% { width: 0%; }
+        50% { width: 45%; }
+        100% { width: 100%; }
+      }
+
+      /* =================================================================
+         3. ESTILIZAÇÃO DA NAVBAR SUPERIOR
+      ================================================================= */
+      .navbar {
+        background: linear-gradient(135deg, #721218 0%, #8e1b22 100%) !important;
+        box-shadow: 0 4px 20px rgba(142, 27, 34, 0.15);
+        padding: 14px 24px;
+      }
+
+      .navbar-brand img { 
+        height: 36px; 
+        object-fit: contain; 
+      }
+
+      .navbar-nav .nav-link { 
+        color: rgba(255, 255, 255, 0.75) !important; 
+        font-weight: 500; 
+      }
+
+      .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { 
+        color: #ffffff !important; 
+      }
+
+      .btn-search-nav {
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .btn-search-nav:hover {
+        background-color: #ffffff !important;
+        color: var(--primary-ciesp) !important;
+      }
+
+      /* =================================================================
+         4. ESTILIZAÇÃO DO CARD DE CADASTRO (FUNDO OFF-WHITE)
+      ================================================================= */
+      .form-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+
+      .form-card {
+        width: 100%;
+        max-width: 480px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        padding: 36px 32px;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      }
+
+      .form-card h2 {
+        color: var(--primary-ciesp);
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        text-align: center;
+      }
+
+      .form-card p.subtitle {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        font-size: 0.9rem;
+        background-color: #f8fafc;
+      }
+
+      .form-control:focus, .form-select:focus {
+        background-color: #ffffff;
+        border-color: var(--primary-ciesp);
+        box-shadow: 0 0 0 4px rgba(142, 27, 34, 0.12);
+      }
+
+      .btn-custom {
+        background: var(--primary-gradient);
+        color: #ffffff;
+        font-weight: 600;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(142, 27, 34, 0.25);
+        transition: all 0.2s ease;
+      }
+
+      .btn-custom:hover { 
+        color: #ffffff; 
+        opacity: 0.95; 
+        transform: translateY(-1px); 
+      }
+      
+      .btn-custom:disabled { 
+        opacity: 0.7; 
+        cursor: not-allowed; 
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ========================================================================= -->
+    <!-- 📍 [1. TELA DE CARREGAMENTO / PRELOADER]                                  -->
+    <!-- Este bloco cobre toda a tela assim que o usuário entra no site.           -->
+    <!-- ========================================================================= -->
+    <div id="preloader">
+      <div class="loader-container">
+        
+        <div class="loader-logo-badge">
+          <!-- ========================================================================= -->
+          <!-- 🔴 ATENÇÃO: ALTERE A LOGO DA TELA DE CARREGAMENTO AQUI                     -->
+          <!-- Substitua a URL dentro de 'src=""' pelo caminho do arquivo da sua logo.   -->
+          <!-- Exemplo: src="imagens/minha-logo.png" ou src="https://site.com/logo.png"  -->
+          <!-- ========================================================================= -->
+          <img src="https://www.ciesp.com.br/images/logo-default-179x36.png" alt="CIESP Logo">
+        </div>
+
+        <!-- Barra de progresso animada logo abaixo da logo -->
+        <div class="loader-progress-track">
+          <div class="loader-progress-bar"></div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- 📍 [2. BARRA DE NAVEGAÇÃO SUPERIOR (NAVBAR)]                               -->
+    <!-- ========================================================================= -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        
+        <a class="navbar-brand" href="#">
+          <!-- ========================================================================= -->
+          <!-- 🔴 ATENÇÃO: ALTERE A LOGO DA BARRA DE NAVEGAÇÃO SUPERIOR AQUI              -->
+          <!-- Substitua a URL dentro de 'src=""' pelo caminho da imagem da sua logo.   -->
+          <!-- ========================================================================= -->
+          <img src="https://www.ciesp.com.br/images/logo-default-179x36.png" alt="CIESP Logo">
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Sobre a CIESP</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Rodada de Negócios</a></li>
+                <li><a class="dropdown-item" href="#">Soluções Industriais</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex ms-auto" role="search">
+            <input class="form-control me-2 bg-white" type="search" placeholder="Buscar indústrias..."/>
+            <button class="btn btn-search-nav" type="submit">Buscar</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+
+    <!-- ========================================================================= -->
+    <!-- 📍 [3. ÁREA PRINCIPAL CENTRALIZADA COM O FORMULÁRIO DE CADASTRO]           -->
+    <!-- ========================================================================= -->
+    <main class="form-wrapper">
+      <div class="form-card">
+        <h2>Cadastrar Empresa</h2>
+        <p class="subtitle">Insira o CNPJ para validar a associação da empresa no sistema.</p>
+        
+        <!-- Formulário com os 7 campos solicitados -->
+        <form id="registerForm">
+          <!-- Campo 1: Nome da Empresa -->
+          <div class="mb-3">
+            <input type="text" id="nomeEmpresa" name="nome" class="form-control" placeholder="Nome da Empresa" required>
+          </div>
+
+          <!-- Campo 2: Site da Empresa (Opcional) -->
+          <div class="mb-3">
+            <input type="url" id="siteEmpresa" name="site" class="form-control" placeholder="Site da empresa (opcional)">
+          </div>
+
+          <!-- Campo 3: CNPJ -->
+          <div class="mb-3">
+            <input type="text" id="cnpj" name="cnpj" class="form-control" placeholder="CNPJ (ex: 78.860.863/0002-07)" required>
+          </div>
+
+          <!-- Campo 4: Contato / Telefone -->
+          <div class="mb-3">
+            <input type="text" id="contato" name="telefone" class="form-control" placeholder="Contato / Telefone" required>
+          </div>
+
+          <!-- Campo 5: E-mail Corporativo -->
+          <div class="mb-3">
+            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail Corporativo" required>
+          </div>
+
+          <!-- Campo 6: Razão Social -->
+          <div class="mb-3">
+            <input type="text" id="razaoSocial" name="razao_social" class="form-control" placeholder="Razão Social" required>
+          </div>
+
+          <!-- Campo 7: Tipo de Empresa (Select) -->
+          <div class="mb-4">
+            <select id="tipoEmpresa" name="tipo" class="form-select" required>
+              <option value="" disabled selected>Tipo de empresa</option>
+              <option value="B">Buscadora de Serviços (Procurando soluções)</option>
+              <option value="P">Prestadora de Serviços (Oferecendo soluções)</option>
+            </select>
+          </div>
+
+          <!-- Botão de Envio com suporte a ícone de carregamento (spinner) -->
+          <button type="submit" id="btnSubmit" class="btn btn-custom">
+            <span id="btnSpinner" class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+            <span id="btnText">Cadastrar e Validar no Banco</span>
+          </button>
+        </form>
+      </div>
+    </main>
+
+
+    <!-- ========================================================================= -->
+    <!-- 📍 [4. SCRIPTS DE INTERAÇÃO (JAVASCRIPT)]                                 -->
+    <!-- ========================================================================= -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+      // -----------------------------------------------------------------
+      // LÓGICA 1: OCULTAR A TELA DE CARREGAMENTO (PRELOADER)
+      // -----------------------------------------------------------------
+      window.addEventListener('load', () => {
+        // Aguarda 2000 milissegundos (2 segundos) para que a animação da barra termine
+        setTimeout(() => {
+          const preloader = document.getElementById('preloader');
+          // Adiciona a classe 'fade-out' para suavizar o desvanecimento da tela branca
+          preloader.classList.add('fade-out');
+        }, 2000);
+      });
+
+      // -----------------------------------------------------------------
+      // LÓGICA 2: ENVIO DO FORMULÁRIO DE CADASTRO
+      // -----------------------------------------------------------------
+      const registerForm = document.getElementById('registerForm');
+      const btnSubmit = document.getElementById('btnSubmit');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+
+      registerForm.addEventListener('submit', async function (e) {
+        e.preventDefault(); // Evita o recarregamento padrão da página ao enviar
+
+        // Desativa o botão e exibe animação no botão
+        btnSubmit.disabled = true;
+        btnSpinner.classList.remove('d-none');
+        btnText.textContent = 'Validando no banco...';
+
+        // Simula o tempo de resposta da API do servidor (800ms)
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        alert('Cadastro enviado para validação com sucesso!');
+
+        // Restaura o botão ao estado original
+        btnSubmit.disabled = false;
+        btnSpinner.classList.add('d-none');
+        btnText.textContent = 'Cadastrar e Validar no Banco';
+      });
+    </script>
+  </body>
+</html>

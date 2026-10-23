@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conecta Indústria - CIESP</title>
+    
+    <!-- ================================================================= -->
+    <!--          [SEÇÃO]: DEPENDÊNCIAS DE ESTILO E ÍCONES                 -->
+    <!-- ================================================================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- ================================================================= -->
+    <!--           [SEÇÃO]: ESTILOS CUSTOMIZADOS (CSS)                     -->
+    <!-- ================================================================= -->
+    <style>
+      :root {
+        --primary-ciesp: #8e1b22;
+        --primary-dark: #6b1419;
+        --primary-gradient: linear-gradient(135deg, #8e1b22 0%, #b3242d 100%);
+        --whatsapp-green: #25D366;
+        --whatsapp-hover: #1da851;
+        --bg-body: #f8fafc;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-dark);
+      }
+
+      /* Estilos da Navbar */
+      .navbar {
+        background: linear-gradient(135deg, #721218 0%, #8e1b22 100%) !important;
+        box-shadow: 0 4px 20px rgba(142, 27, 34, 0.15);
+        padding: 14px 24px;
+      }
+
+      .navbar-brand img { height: 36px; object-fit: contain; }
+      .navbar-nav .nav-link { color: rgba(255, 255, 255, 0.75) !important; font-weight: 500; }
+      .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: #ffffff !important; }
+
+      .btn-search-nav {
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .btn-search-nav:hover {
+        background-color: #ffffff !important;
+        color: var(--primary-ciesp) !important;
+      }
+
+      /* Estrutura central e Desfoque (Blur) */
+      .form-wrapper {
+        position: relative;
+        min-height: calc(100vh - 76px);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 20px;
+      }
+
+      .wrapper { position: relative; width: 100%; max-width: 1240px; }
+
+      /* Aplica o blur no fundo */
+      .blur-content {
+        filter: blur(14px) opacity(0.4);
+        user-select: none;
+        pointer-events: none;
+        transition: filter 0.5s ease, opacity 0.5s ease;
+      }
+
+      /* Estilo dos Cards de Empresas */
+      .custom-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 16px;
+        padding: 24px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+      }
+
+      .badge-sector {
+        display: inline-block;
+        background-color: #fef2f2;
+        color: var(--primary-ciesp);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 20px;
+        margin-bottom: 12px;
+        width: fit-content;
+      }
+
+      .custom-card .card-title { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+      .custom-card .card-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+      .custom-card .card-text { font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 20px; }
+
+      .btn-card-action {
+        border: 1.5px solid var(--primary-ciesp);
+        color: var(--primary-ciesp);
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        background: transparent;
+      }
+
+      /* Estilo do Modal de Cadastro Flutuante */
+      .register-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 92%;
+        max-width: 480px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        padding: 36px 32px;
+        border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        max-height: 88vh;
+        overflow-y: auto;
+      }
+
+      .register-modal h2 {
+        color: var(--primary-ciesp);
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        text-align: center;
+      }
+
+      .register-modal p.subtitle {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        font-size: 0.9rem;
+        background-color: #f8fafc;
+      }
+
+      .form-control:focus, .form-select:focus {
+        background-color: #ffffff;
+        border-color: var(--primary-ciesp);
+        box-shadow: 0 0 0 4px rgba(142, 27, 34, 0.12);
+      }
+
+      .btn-custom {
+        background: var(--primary-gradient);
+        color: #ffffff;
+        font-weight: 600;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(142, 27, 34, 0.3);
+        transition: all 0.2s ease;
+      }
+
+      .btn-custom:hover { color: #ffffff; transform: translateY(-1px); }
+      .btn-custom:disabled { opacity: 0.7; cursor: not-allowed; }
+
+      /* Botões de Ação na Tela de Bloqueio */
+      .btn-whatsapp {
+        background-color: var(--whatsapp-green);
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 12px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+      }
+
+      .btn-whatsapp:hover { background-color: var(--whatsapp-hover); color: #ffffff; }
+
+      .btn-site-ciesp {
+        background-color: transparent;
+        color: var(--primary-ciesp);
+        border: 1.5px solid var(--primary-ciesp);
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 12px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .btn-site-ciesp:hover { background-color: var(--primary-ciesp); color: #ffffff; }
+
+      .lock-badge {
+        width: 60px;
+        height: 60px;
+        background-color: #fef2f2;
+        color: var(--primary-ciesp);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px auto;
+        font-size: 1.5rem;
+      }
+
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+
+    <!-- ================================================================= -->
+    <!--              [SEÇÃO]: NAVBAR SUPERIOR                             -->
+    <!-- ================================================================= -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="https://www.ciesp.com.br/images/logo-default-179x36.png" alt="CIESP Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Sobre a CIESP</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Rodada de Negócios</a></li>
+                <li><a class="dropdown-item" href="#">Soluções Industriais</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex ms-auto" role="search">
+            <input class="form-control me-2 bg-white" type="search" placeholder="Buscar indústrias..."/>
+            <button class="btn btn-search-nav" type="submit">Buscar</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================================================================= -->
+    <!--  [SEÇÃO]: ÁREA PRINCIPAL (CARDS + MODAL)                          -->
+    <!-- ================================================================= -->
+    <main class="form-wrapper">
+      <div class="wrapper">
+        
+        <!-- CONTAINER ONDE OS CARDS SÃO GERADOS (INICIA COM BLUR) -->
+        <div id="content" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 blur-content">
+          <!-- Os cards são inseridos dinamicamente pelo JS abaixo -->
+        </div>
+
+        <!-- MODAL DE REGISTRO E TELA DE BLOQUEIO -->
+        <div id="modal" class="register-modal">
+          
+          <!-- ETAPA 1: FORMULÁRIO DE CADASTRO -->
+          <div id="stepForm">
+            <h2>Cadastrar Empresa</h2>
+            <p class="subtitle">Insira o CNPJ para validar a associação da empresa no sistema.</p>
+            
+            <form id="registerForm">
+              <div class="mb-3">
+                <input type="text" id="nomeEmpresa" name="nome" class="form-control" placeholder="Nome da Empresa" required>
+              </div>
+
+              <div class="mb-3">
+                <input type="url" id="siteEmpresa" name="site" class="form-control" placeholder="Site da empresa (opcional)">
+              </div>
+
+              <div class="mb-3">
+                <input type="text" id="cnpj" name="cnpj" class="form-control" placeholder="CNPJ (ex: 11.111.111/0001-91)" required>
+              </div>
+
+              <div class="mb-3">
+                <input type="text" id="contato" name="telefone" class="form-control" placeholder="Contato / Telefone" required>
+              </div>
+
+              <div class="mb-3">
+                <input type="email" id="email" name="email" class="form-control" placeholder="E-mail Corporativo" required>
+              </div>
+
+              <div class="mb-3">
+                <input type="text" id="razaoSocial" name="razao_social" class="form-control" placeholder="Razão Social" required>
+              </div>
+
+              <div class="mb-4">
+                <select id="tipoEmpresa" name="tipo" class="form-select" required>
+                  <option value="" disabled selected>Tipo de empresa</option>
+                  <option value="B">Buscadora de Serviços (Procurando soluções)</option>
+                  <option value="P">Prestadora de Serviços (Oferecendo soluções)</option>
+                </select>
+              </div>
+
+              <button type="submit" id="btnSubmit" class="btn btn-custom">
+                <span id="btnSpinner" class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                <span id="btnText">Cadastrar e Validar no Banco</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- ETAPA 2: TELA DE BLOQUEIO PARA NÃO ASSOCIADOS -->
+          <div id="stepNotAssociated" class="hidden text-center">
+            <div class="lock-badge">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2>Cadastro Realizado!</h2>
+            <p class="subtitle mb-3">
+              Consultamos o banco de dados do CIESP e o seu CNPJ ainda não consta como empresa associada. O acesso aos dados das <strong>31 indústrias</strong> é exclusivo para associados.
+            </p>
+
+            <div class="alert alert-light border text-start mb-4 p-3" style="border-radius: 12px;">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="fa-solid fa-circle-info text-danger"></i>
+                <strong style="font-size: 0.85rem;">Status do Conteúdo:</strong>
+              </div>
+              <p class="mb-0 text-muted" style="font-size: 0.8rem;">
+                O conteúdo permanecerá bloqueado (blur). Escolha uma opção abaixo para falar com o CIESP e liberar o seu acesso:
+              </p>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+              <a id="linkWhatsapp" href="https://wa.me/5511999999999" target="_blank" class="btn-whatsapp">
+                <i class="fa-brands fa-whatsapp fa-lg"></i>
+                Quero me associar pelo WhatsApp
+              </a>
+
+              <a href="https://www.ciesp.com.br/associe-se" target="_blank" class="btn-site-ciesp">
+                <i class="fa-solid fa-globe"></i>
+                Conhecer Planos no Site CIESP
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ================================================================= -->
+    <!--       [SEÇÃO]: SCRIPT JAVASCRIPT (AJAX FETCH INTEGRADO)           -->
+    <!-- ================================================================= -->
+    <script>
+      // 1. GERA AUTOMATICAMENTE OS 31 CARDS COM IMAGEM NO GRID
+      const contentContainer = document.getElementById('content');
+      const setores = ['Metalmecânica', 'Automação', 'Química', 'Logística', 'Energia', 'Tecnologia'];
+
+      for (let i = 1; i <= 31; i++) {
+        const setorRandom = setores[(i - 1) % setores.length];
+        const imagemUrl = `https://picsum.photos/seed/empresa${i}/400/200`;
+
+        const cardHTML = `
+          <div class="col">
+            <div class="custom-card">
+              <div class="card-img-container mb-3">
+                <img 
+                  src="${imagemUrl}" 
+                  class="img-fluid rounded-3 w-100" 
+                  alt="Imagem ${setorRandom}" 
+                  style="height: 160px; object-fit: cover;"
+                >
+              </div>
+
+              <div>
+                <span class="badge-sector">${setorRandom}</span>
+                <h5 class="card-title">Empresa parceira #${i}</h5>
+                <h6 class="card-subtitle">Soluções Industriais & Tecnologia</h6>
+                <p class="card-text">Oportunidades de negócios, demandas operacionais e contatos diretos com a fornecedora #${i}.</p>
+              </div>
+              <button class="btn btn-card-action">Ver detalhes da empresa</button>
+            </div>
+          </div>
+        `;
+        contentContainer.insertAdjacentHTML('beforeend', cardHTML);
+      }
+
+      // 2. REQUISIÇÃO AJAX (FETCH) PARA VALIDAR O CNPJ SEM NAVEGAR DE PÁGINA
+      const registerForm = document.getElementById('registerForm');
+      const stepForm = document.getElementById('stepForm');
+      const stepNotAssociated = document.getElementById('stepNotAssociated');
+      const content = document.getElementById('content');
+      const modal = document.getElementById('modal');
+
+      registerForm.addEventListener('submit', async function (e) {
+        e.preventDefault(); 
+
+        const btnSubmit = document.getElementById('btnSubmit');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const btnText = document.getElementById('btnText');
+
+        // Ativa estado de carregamento no botão
+        btnSubmit.disabled = true;
+        btnSpinner.classList.remove('d-none');
+        btnText.textContent = 'Validando no banco...';
+
+        const formData = new FormData(registerForm);
+
+        try {
+          // Envia requisição para a rota Flask em segundo plano
+          const response = await fetch('/post_empresa', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error('Erro na comunicação com a API Flask');
+          }
+
+          const data = await response.json();
+
+          // LÓGICA DE EXIBIÇÃO:
+          if (data.associado === true) {
+            // CNPJ ASSOCIADO: Oculta o modal e Remove o BLUR da página
+            modal.classList.add('hidden');
+            content.classList.remove('blur-content');
+          } else {
+            // CNPJ NÃO ASSOCIADO: Oculta formulário e exibe bloqueio do WhatsApp
+            stepForm.classList.add('hidden');
+            stepNotAssociated.classList.remove('hidden');
+          }
+
+        } catch (error) {
+          console.error('Erro no envio:', error);
+          alert('Erro ao consultar o servidor Python. Verifique se o Flask está rodando.');
+        } finally {
+          // Restaura botão
+          btnSubmit.disabled = false;
+          btnSpinner.classList.add('d-none');
+          btnText.textContent = 'Cadastrar e Validar no Banco';
+        }
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>
